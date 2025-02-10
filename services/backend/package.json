@@ -1,0 +1,26 @@
+{
+  "name": "@dakku/backend",
+  "author": "DuckyCoding",
+  "version": "0.0.1",
+  "private": true,
+  "scripts": {
+    "dev": "bun run --hot src/index.ts",
+    "dev:tsc": "tsc -p tsconfig.build.json --watch",
+    "build": "tsc -p tsconfig.build.json"
+  },
+  "dependencies": {
+    "hono": "^4.7.0",
+    "@dakku/utils": "*"
+  },
+  "devDependencies": {
+    "@types/bun": "latest"
+  },
+  "exports": {
+    "./hc": {
+      "import": {
+        "default": "./dist/hc.js",
+        "types": "./dist/hc.d.ts"
+      }
+    }
+  }
+}
