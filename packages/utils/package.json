@@ -1,0 +1,21 @@
+{
+  "name": "@dakku/utils",
+  "version": "0.0.1",
+  "type": "module",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "build": "tsc",
+    "dev": "tsc -w"
+  },
+  "keywords": [],
+  "author": "DuckyCoding",
+  "description": "",
+  "module": ".dist/index.js",
+  "main": ".dist/index.js",
+  "exports": {
+    ".": {
+      "types": "./dist/index.d.ts",
+      "default": "./dist/index.js"
+    }
+  }
+}
