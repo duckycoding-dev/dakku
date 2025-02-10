@@ -4,9 +4,10 @@
   "version": "0.0.1",
   "private": true,
   "scripts": {
-    "dev": "bun run --hot src/index.ts",
-    "dev:tsc": "tsc -p tsconfig.build.json --watch",
-    "build": "tsc -p tsconfig.build.json"
+    "dev": "bun run ./scripts/dev",
+    "dev:bun": "bun run --hot src/index.ts",
+    "dev:tsc": "tsc --project tsconfig.build.json --watch",
+    "build": "tsc --project tsconfig.build.json"
   },
   "dependencies": {
     "hono": "^4.7.0",

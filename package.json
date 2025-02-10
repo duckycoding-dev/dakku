@@ -3,10 +3,6 @@
   "author": "DuckyCoding",
   "version": "0.0.1",
   "private": true,
-  "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1",
-    "prepare": "husky"
-  },
   "repository": {
     "type": "git",
     "url": "git+https://github.com/duckycoding-dev/dakku.git"
@@ -36,5 +32,10 @@
     "prettier": "3.5.0",
     "typescript-eslint": "^8.24.0"
   },
-  "dependencies": {}
+  "dependencies": {},
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "prepare": "husky",
+    "dev": "npm run dev --workspaces --if-present"
+  }
 }
