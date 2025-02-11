@@ -173,3 +173,5 @@ dist
 .env.test.local
 .env.production.local
 .env.local
+
+opensource_data_used/
