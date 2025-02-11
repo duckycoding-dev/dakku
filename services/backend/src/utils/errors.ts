@@ -1,5 +1,4 @@
 import type { Context } from 'hono';
-import { HTTPException } from 'hono/http-exception';
 import type { ContentfulStatusCode } from 'hono/utils/http-status';
 import type { ErrorResponse } from 'src/types/response';
 
@@ -45,27 +44,22 @@ const errorMap: Record<ErrorCode, ErrorMapping> = {
   INTERNAL: DEFAULT_ERROR_MAPPING,
 } as const;
 
-type HTTPExceptionOptions = NonNullable<
-  ConstructorParameters<typeof HTTPException>[1]
->;
-
-type AppErrorOptions = HTTPExceptionOptions & {
+type AppErrorOptions = {
+  message?: string;
   hideToClient?: boolean;
   statusCodeOverride?: ContentfulStatusCode;
+  cause?: unknown;
 };
 
 /**
  * Custom error class to handle application-specific errors.
  * The resulting status code and message are determined by the error type if none are provided.
  * @class
- * @extends HTTPException
  * @param type - The type of error to throw.
  * @param options - Additional options for the error.
  * @param options.statusCodeOverride - Override the default status code that is defined by the mapper based on the passed error type.
- * @param options.message - Custom error message to display.
+ * @param options.message - Custom error message to display - if omitted the generic mapped message will be shown instead.
  * @param options.hideToClient - Whether to hide the custom error message from the client and show the generic mapped message instead.
- * @param options.res - Optional response object to use - if this is provided this is what get's returned.
- * @param options.cause - Optional cause of the error.
  * @example
  * ```ts
  * throw new AppError('NOT_FOUND');
@@ -73,30 +67,31 @@ type AppErrorOptions = HTTPExceptionOptions & {
  * throw new AppError('INTERNAL', { hideToClient: true });
  * ```
  */
-export class AppError extends HTTPException {
+export class AppError extends Error {
   readonly name: 'AppError';
   readonly code: ErrorCode;
   readonly hideToClient: boolean;
+  readonly status: ContentfulStatusCode;
 
-  constructor(code: ErrorCode, options: AppErrorOptions = {}) {
+  constructor(
+    code: ErrorCode = DEFAULT_ERROR_MAPPING.code,
+    options: AppErrorOptions = {},
+  ) {
     const mappedError = errorMap[code];
     const status =
       options.statusCodeOverride ??
       mappedError?.status ??
       DEFAULT_ERROR_MAPPING.status;
 
-    super(status, {
-      res: options.res,
+    const finalMessage =
+      options.message || mappedError?.message || DEFAULT_ERROR_MAPPING.message;
+    super(finalMessage, {
       cause: options.cause,
-      message:
-        options.message ||
-        mappedError?.message ||
-        DEFAULT_ERROR_MAPPING.message,
-      // we omit the res property from the options object to enforce type safety of the error
     });
 
     Object.setPrototypeOf(this, AppError.prototype);
 
+    this.status = status;
     this.name = 'AppError';
     this.code = code;
     this.hideToClient = options.hideToClient ?? false;
@@ -119,10 +114,7 @@ const serializeError = (err: Error) => {
   };
 };
 
-export const errorHandler = (
-  err: Error | AppError | HTTPException,
-  c: Context,
-): Response => {
+export const errorHandler = (err: Error | AppError, c: Context): Response => {
   console.error(
     `[${new Date().toISOString()}] Error:`,
     JSON.stringify(serializeError(err), null, 2),
@@ -136,11 +128,6 @@ export const errorHandler = (
 
     const cause: unknown =
       process.env.NODE_ENV === 'development' ? err.cause : undefined;
-
-    // If the error has a response object, use it instead of the default behavior: it is handled as a forcing mechanism
-    if (err.res) {
-      return err.res;
-    }
 
     const errorResponse: ErrorResponse = {
       success: false,
