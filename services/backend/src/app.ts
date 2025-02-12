@@ -1,12 +1,12 @@
-import { Hono } from 'hono';
-import { errorHandler } from './utils/errors';
-import { userRouter } from './features/user/user.routes';
+import { userRouter } from './features/user/user.router';
+import type { AppOpenAPI } from './types/app_context';
+import { createApp } from './utils/create-app';
 
-export const app = new Hono();
+export const app = createApp();
 
-app.onError(errorHandler);
-
-app.route('/users', userRouter);
-app.get('/', (c) => {
-  return c.text('Hello Hono!');
+const routers: AppOpenAPI[] = [userRouter] as const;
+routers.forEach((router) => {
+  app.route('/', router);
 });
+
+export type AppType = (typeof routers)[number];
