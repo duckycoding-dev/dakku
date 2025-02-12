@@ -15,7 +15,11 @@ export function createRouter() {
       if (!result.success) {
         throw new AppError('VALIDATION', {
           cause: result.target,
-          message: result.error.errors.join(', '),
+          message: result.error.errors
+            .map((e, index) => {
+              return `${index + 1}- ${e.message}`;
+            })
+            .join('\n'),
         });
       }
     },

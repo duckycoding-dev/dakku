@@ -128,12 +128,15 @@ export const errorHandler = (err: Error | AppError, c: Context): Response => {
 
     const cause: unknown =
       process.env.NODE_ENV === 'development' ? err.cause : undefined;
+    const stack =
+      process.env.NODE_ENV === 'development' ? err.stack : undefined;
 
     const errorResponse: ErrorResponse = {
       success: false,
       error: message,
       code: err.code,
       cause: cause,
+      stack: stack,
     };
 
     return c.json(errorResponse, err.status);

@@ -22,4 +22,5 @@ export type ErrorResponse = {
   error: string;
   code: ErrorCode;
   cause?: unknown;
+  stack?: string;
 };
