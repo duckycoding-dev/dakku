@@ -8,7 +8,7 @@ import type {
 } from '../types/app_context';
 import { configureOpenAPI } from './configure-open-api';
 
-export function createRouter(basePath: string) {
+export function createRouter() {
   const router = new OpenAPIHono<AppContext>({
     strict: false, // treat trailing slashes as the same route as no trailing slashes
     defaultHook: (result) => {
@@ -19,10 +19,15 @@ export function createRouter(basePath: string) {
         });
       }
     },
-  }).basePath(basePath);
+  });
   return router;
 }
 
+/**
+ * Popoulate the router with the routes and the controller
+ * This works, but it's not type safe as of hono v4.7.0
+ * @deprecated
+ **/
 export function popoulateRouter<C extends object>(
   router: AppOpenAPI,
   routes: AppRoutes,
@@ -44,7 +49,7 @@ export function popoulateRouter<C extends object>(
 }
 
 export function createApp(): AppOpenAPI {
-  const app = createRouter('');
+  const app = createRouter();
 
   configureOpenAPI(app);
   app.onError(errorHandler);

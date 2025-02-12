@@ -1,8 +1,8 @@
 // import { createDatabase } from '../database';
-import { createUserController, type UserController } from './user.controller';
+import { createUserController } from './user.controller';
 import { createUserService } from './user.service';
 import { createUserRepository } from './user.repository';
-import { createRouter, popoulateRouter } from '../../utils/create-app';
+import { createRouter } from '../../utils/create-app';
 
 import { userRoutes } from './user.routes';
 // Setup dependencies
@@ -12,6 +12,9 @@ const userService = createUserService(userRepo);
 const userController = createUserController(userService);
 
 // Create a typed router
-export const userRouter = createRouter('/users');
+const userRouter = createRouter()
+  .basePath('/users')
+  .openapi(userRoutes.getUser, userController.getUser)
+  .openapi(userRoutes.createUser, userController.createUser);
 
-popoulateRouter<UserController>(userRouter, userRoutes, userController);
+export default userRouter;

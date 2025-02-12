@@ -1,10 +1,11 @@
-import { userRouter } from './features/user/user.router';
+import userRouter from './features/user/user.router';
 import type { AppOpenAPI } from './types/app_context';
 import { createApp } from './utils/create-app';
 
 export const app = createApp();
 
-const routers: AppOpenAPI[] = [userRouter] as const;
+const routers = [userRouter] as const satisfies AppOpenAPI[];
+
 routers.forEach((router) => {
   app.route('/', router);
 });
