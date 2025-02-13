@@ -6,6 +6,7 @@
   "private": true,
   "scripts": {
     "dev": "bun run ./scripts/dev",
+    "dev:db": "docker compose -f ./docker-compose.yml up",
     "dev:bun": "bun run --hot src/index.ts",
     "dev:tsc": "tsc --project tsconfig.build.json --watch",
     "build": "tsc --project tsconfig.build.json"

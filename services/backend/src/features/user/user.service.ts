@@ -1,3 +1,4 @@
+import { AppError } from '../../utils/errors';
 import type { UserRepository } from './user.repository';
 
 export type UserService = {
@@ -11,7 +12,13 @@ export const createUserService = (
 ): UserService => {
   return {
     getUser: async (id) => {
-      return userRepository.getUser(id);
+      const user = await userRepository.getUser(id);
+      if (!user) {
+        throw new AppError('NOT_FOUND', {
+          message: 'User not found',
+        });
+      }
+      return user;
     },
     createUser: async (name) => {
       return userRepository.createUser(name);

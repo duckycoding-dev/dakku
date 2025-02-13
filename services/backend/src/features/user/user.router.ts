@@ -1,13 +1,12 @@
-// import { createDatabase } from '../database';
 import { createUserController } from './user.controller';
 import { createUserService } from './user.service';
 import { createUserRepository } from './user.repository';
 import { createRouter } from '../../utils/create-app';
 
 import { userRoutes } from './user.routes';
+import { db } from '../../db';
 // Setup dependencies
-// const db = createDatabase();
-const userRepo = createUserRepository({});
+const userRepo = createUserRepository(db);
 const userService = createUserService(userRepo);
 const userController = createUserController(userService);
 

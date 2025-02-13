@@ -1,6 +1,7 @@
 import type { Context } from 'hono';
 import type { ContentfulStatusCode } from 'hono/utils/http-status';
 import type { ErrorResponse } from 'src/types/response';
+import env from './env';
 
 const DEFAULT_ERROR_MAPPING: ErrorMapping = {
   status: 500,
@@ -122,14 +123,13 @@ export const errorHandler = (err: Error | AppError, c: Context): Response => {
 
   if (err instanceof AppError) {
     const message: string =
-      process.env.NODE_ENV === 'development' || !err.hideToClient
+      env.NODE_ENV === 'development' || !err.hideToClient
         ? err.message
         : (errorMap[err.code]?.message ?? 'Internal Server Error');
 
     const cause: unknown =
-      process.env.NODE_ENV === 'development' ? err.cause : undefined;
-    const stack =
-      process.env.NODE_ENV === 'development' ? err.stack : undefined;
+      env.NODE_ENV === 'development' ? err.cause : undefined;
+    const stack = env.NODE_ENV === 'development' ? err.stack : undefined;
 
     const errorResponse: ErrorResponse = {
       success: false,
