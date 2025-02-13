@@ -4,7 +4,7 @@ import fs from 'fs/promises';
 
 async function importSentences() {
   const data = await fs.readFile(
-    '../../../../opensource_data_used/sentences.tsv',
+    '../../opensource_data_used/sentences.tsv',
     'utf-8',
   );
   const lines = data.split('\n');
@@ -13,7 +13,6 @@ async function importSentences() {
     const [englishId, english, japaneseId, japanese] = line.split('\t');
     console.log(englishId, english, japaneseId, japanese);
     await db.insert(sentences).values({
-      id: parseInt(englishId as string),
       japanese: japanese,
       english: english,
     });

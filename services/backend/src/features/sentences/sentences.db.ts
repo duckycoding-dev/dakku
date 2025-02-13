@@ -1,7 +1,7 @@
-import { integer, pgTable, text } from 'drizzle-orm/pg-core';
+import { serial, pgTable, text } from 'drizzle-orm/pg-core';
 
 export const sentences = pgTable('sentences', {
-  id: integer('id').primaryKey(),
+  id: serial('id').primaryKey(),
   japanese: text('japanese'),
   english: text('english'),
 });

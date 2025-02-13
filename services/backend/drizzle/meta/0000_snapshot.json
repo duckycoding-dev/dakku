@@ -1,0 +1,172 @@
+{
+  "id": "96c574b6-20a4-491b-a695-5ca213aafcb1",
+  "prevId": "00000000-0000-0000-0000-000000000000",
+  "version": "7",
+  "dialect": "postgresql",
+  "tables": {
+    "public.kanjis": {
+      "name": "kanjis",
+      "schema": "",
+      "columns": {
+        "id": {
+          "name": "id",
+          "type": "text",
+          "primaryKey": true,
+          "notNull": true
+        },
+        "grade": {
+          "name": "grade",
+          "type": "integer",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "stroke_count": {
+          "name": "stroke_count",
+          "type": "jsonb",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "frequency": {
+          "name": "frequency",
+          "type": "integer",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "jlpt_level": {
+          "name": "jlpt_level",
+          "type": "integer",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "radical_names": {
+          "name": "radical_names",
+          "type": "jsonb",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "nanori": {
+          "name": "nanori",
+          "type": "jsonb",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "meanings": {
+          "name": "meanings",
+          "type": "jsonb",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "readings": {
+          "name": "readings",
+          "type": "jsonb",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "query_codes": {
+          "name": "query_codes",
+          "type": "jsonb",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "codepoints": {
+          "name": "codepoints",
+          "type": "jsonb",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "dictionary_refs": {
+          "name": "dictionary_refs",
+          "type": "jsonb",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "variants": {
+          "name": "variants",
+          "type": "jsonb",
+          "primaryKey": false,
+          "notNull": false
+        }
+      },
+      "indexes": {},
+      "foreignKeys": {},
+      "compositePrimaryKeys": {},
+      "uniqueConstraints": {},
+      "policies": {},
+      "checkConstraints": {},
+      "isRLSEnabled": false
+    },
+    "public.sentences": {
+      "name": "sentences",
+      "schema": "",
+      "columns": {
+        "id": {
+          "name": "id",
+          "type": "serial",
+          "primaryKey": true,
+          "notNull": true
+        },
+        "japanese": {
+          "name": "japanese",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "english": {
+          "name": "english",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": false
+        }
+      },
+      "indexes": {},
+      "foreignKeys": {},
+      "compositePrimaryKeys": {},
+      "uniqueConstraints": {},
+      "policies": {},
+      "checkConstraints": {},
+      "isRLSEnabled": false
+    },
+    "public.vocabulary": {
+      "name": "vocabulary",
+      "schema": "",
+      "columns": {
+        "id": {
+          "name": "id",
+          "type": "text",
+          "primaryKey": true,
+          "notNull": true
+        },
+        "reading": {
+          "name": "reading",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "meaning": {
+          "name": "meaning",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": false
+        }
+      },
+      "indexes": {},
+      "foreignKeys": {},
+      "compositePrimaryKeys": {},
+      "uniqueConstraints": {},
+      "policies": {},
+      "checkConstraints": {},
+      "isRLSEnabled": false
+    }
+  },
+  "enums": {},
+  "schemas": {},
+  "sequences": {},
+  "roles": {},
+  "policies": {},
+  "views": {},
+  "_meta": {
+    "columns": {},
+    "schemas": {},
+    "tables": {}
+  }
+}
