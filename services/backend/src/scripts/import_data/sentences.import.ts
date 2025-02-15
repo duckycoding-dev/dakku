@@ -1,8 +1,8 @@
-import { db } from '../../src/db';
-import { sentences } from '../../src/features/sentences/sentences.db';
+import { db } from '../../db';
+import { sentences } from '../../features/sentences/sentences.db';
 import fs from 'fs/promises';
 
-async function importSentences() {
+export async function importSentences() {
   const data = await fs.readFile(
     '../../opensource_data_used/sentences.tsv',
     'utf-8',
@@ -20,5 +20,3 @@ async function importSentences() {
 
   console.log('Sentences import complete!');
 }
-
-importSentences();

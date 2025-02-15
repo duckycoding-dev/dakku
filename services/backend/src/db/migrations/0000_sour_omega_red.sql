@@ -21,7 +21,10 @@ CREATE TABLE "sentences" (
 );
 --> statement-breakpoint
 CREATE TABLE "vocabulary" (
-	"id" text PRIMARY KEY NOT NULL,
-	"reading" text,
-	"meaning" text
+	"id" integer PRIMARY KEY NOT NULL,
+	"kanji" jsonb,
+	"readings" jsonb NOT NULL,
+	"senses" jsonb NOT NULL,
+	"tags" text DEFAULT ,
+	"priorities" text DEFAULT 
 );

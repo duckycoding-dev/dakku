@@ -1,6 +1,6 @@
 {
-  "id": "96c574b6-20a4-491b-a695-5ca213aafcb1",
-  "prevId": "00000000-0000-0000-0000-000000000000",
+  "id": "fce2c677-21d9-4db8-a0bd-b3c6a3467870",
+  "prevId": "443c3618-3109-4bee-bbe4-7566829e8bb2",
   "version": "7",
   "dialect": "postgresql",
   "tables": {
@@ -132,19 +132,37 @@
       "columns": {
         "id": {
           "name": "id",
-          "type": "text",
+          "type": "integer",
           "primaryKey": true,
           "notNull": true
         },
-        "reading": {
-          "name": "reading",
-          "type": "text",
+        "kanji": {
+          "name": "kanji",
+          "type": "jsonb[]",
           "primaryKey": false,
           "notNull": false
         },
-        "meaning": {
-          "name": "meaning",
-          "type": "text",
+        "readings": {
+          "name": "readings",
+          "type": "jsonb[]",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "senses": {
+          "name": "senses",
+          "type": "jsonb[]",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "tags": {
+          "name": "tags",
+          "type": "text[]",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "priorities": {
+          "name": "priorities",
+          "type": "text[]",
           "primaryKey": false,
           "notNull": false
         }

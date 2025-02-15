@@ -1,7 +1,7 @@
 import { XMLParser } from 'fast-xml-parser';
 import fs from 'fs';
-import { db } from '../../src/db';
-import { vocabulary } from '../../src/features/vocabulary/vocabulary.db';
+import { db } from '../../db';
+import { vocabulary } from '../../features/vocabulary/vocabulary.db';
 import type {
   Field,
   KanjiElement,
@@ -15,7 +15,7 @@ import type {
   Sense,
   Dialect,
   Vocabulary,
-} from 'services/backend/src/features/vocabulary/vocabulary.types';
+} from '../../features/vocabulary/vocabulary.types';
 
 // Types based on DTD definitions
 type XMLTextNode<T> = {
@@ -99,7 +99,7 @@ const parser = new XMLParser({
   parseAttributeValue: true,
 });
 
-async function importJMdict(filePath: string) {
+export async function importJMdict(filePath: string) {
   console.log('⏳ Parsing XML file...');
   const xmlData = fs.readFileSync(filePath, 'utf-8');
   const dictionary: JMdict = parser.parse(xmlData);
@@ -216,7 +216,7 @@ async function importJMdict(filePath: string) {
       readings,
       senses,
       tags: tags,
-      priority: priorities,
+      priorities: priorities,
     };
   });
 
@@ -234,7 +234,3 @@ async function importJMdict(filePath: string) {
 
   console.log('✨ Import completed successfully!');
 }
-
-// Run the import
-const XML_FILE_PATH = '../../opensource_data_used/JMdict_e.xml';
-importJMdict(XML_FILE_PATH).catch(console.error);

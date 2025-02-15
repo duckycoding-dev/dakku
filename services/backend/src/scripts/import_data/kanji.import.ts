@@ -1,7 +1,7 @@
 import fs from 'fs';
 import { XMLParser } from 'fast-xml-parser';
-import { db } from '../../src/db'; // Import your Drizzle DB setup
-import { kanjis } from '../../src/features/kanji/kanji.db'; // Import the kanji table
+import { db } from '../../db'; // Import your Drizzle DB setup
+import { kanjis } from '../../features/kanji/kanji.db'; // Import the kanji table
 
 export type KanjiDic2 = {
   kanjidic2: {

@@ -4,6 +4,7 @@ import postgres from 'postgres';
 import env from '../utils/env';
 
 const postgresClient = postgres({
+  max: env.DB_MIGRATING || env.DB_SEEDING ? 1 : undefined,
   database: env.POSTGRES_DB,
   username: env.POSTGRES_USER,
   password: env.POSTGRES_PASSWORD,

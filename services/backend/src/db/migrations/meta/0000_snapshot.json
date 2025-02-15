@@ -1,6 +1,6 @@
 {
-  "id": "e4ab585c-e0a6-410f-8390-b7a8ac3e9686",
-  "prevId": "96c574b6-20a4-491b-a695-5ca213aafcb1",
+  "id": "443c3618-3109-4bee-bbe4-7566829e8bb2",
+  "prevId": "00000000-0000-0000-0000-000000000000",
   "version": "7",
   "dialect": "postgresql",
   "tables": {
@@ -138,47 +138,35 @@
         },
         "kanji": {
           "name": "kanji",
-          "type": "jsonb[]",
+          "type": "jsonb",
           "primaryKey": false,
           "notNull": false
         },
         "readings": {
           "name": "readings",
-          "type": "jsonb[]",
+          "type": "jsonb",
           "primaryKey": false,
-          "notNull": false
+          "notNull": true
         },
         "senses": {
           "name": "senses",
-          "type": "jsonb[]",
+          "type": "jsonb",
           "primaryKey": false,
-          "notNull": false
+          "notNull": true
         },
         "tags": {
           "name": "tags",
-          "type": "text[]",
+          "type": "text",
           "primaryKey": false,
-          "notNull": false
+          "notNull": false,
+          "default": []
         },
-        "priority": {
-          "name": "priority",
-          "type": "text[]",
+        "priorities": {
+          "name": "priorities",
+          "type": "text",
           "primaryKey": false,
-          "notNull": false
-        },
-        "created_at": {
-          "name": "created_at",
-          "type": "integer",
-          "primaryKey": false,
-          "notNull": true,
-          "default": "extract(epoch from now())"
-        },
-        "updated_at": {
-          "name": "updated_at",
-          "type": "integer",
-          "primaryKey": false,
-          "notNull": true,
-          "default": "extract(epoch from now())"
+          "notNull": false,
+          "default": []
         }
       },
       "indexes": {},

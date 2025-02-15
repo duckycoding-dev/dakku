@@ -338,5 +338,5 @@ export type Vocabulary = {
   readings: ReadingElement[];
   senses: Sense[];
   tags: KanjiTag[];
-  priority: Priority[];
+  priorities: Priority[];
 };
