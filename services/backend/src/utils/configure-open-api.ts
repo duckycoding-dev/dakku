@@ -15,6 +15,7 @@ export function configureOpenAPI(app: AppOpenAPI) {
   app.get(
     '/reference',
     apiReference({
+      pageTitle: 'Dakku API Reference',
       theme: 'kepler',
       layout: 'classic',
       spec: {
