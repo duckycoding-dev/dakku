@@ -1,6 +1,6 @@
 import { AppError } from '../../utils/errors';
 import type { VocabularyRepository } from './vocabulary.repository';
-import type { Vocabulary } from './vocabulary.types';
+import type { Vocabulary } from './vocabulary.db';
 
 export type VocabularyService = {
   getVocab: (id: number) => Promise<Vocabulary>;
