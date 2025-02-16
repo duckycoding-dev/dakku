@@ -1,5 +1,5 @@
 {
-  "id": "443c3618-3109-4bee-bbe4-7566829e8bb2",
+  "id": "84db81ba-7c3b-40e8-a247-7a64d1b0eb04",
   "prevId": "00000000-0000-0000-0000-000000000000",
   "version": "7",
   "dialect": "postgresql",
@@ -10,81 +10,56 @@
       "columns": {
         "id": {
           "name": "id",
-          "type": "text",
+          "type": "serial",
           "primaryKey": true,
           "notNull": true
         },
-        "grade": {
-          "name": "grade",
-          "type": "integer",
+        "literal": {
+          "name": "literal",
+          "type": "text",
           "primaryKey": false,
-          "notNull": false
-        },
-        "stroke_count": {
-          "name": "stroke_count",
-          "type": "jsonb",
-          "primaryKey": false,
-          "notNull": false
-        },
-        "frequency": {
-          "name": "frequency",
-          "type": "integer",
-          "primaryKey": false,
-          "notNull": false
-        },
-        "jlpt_level": {
-          "name": "jlpt_level",
-          "type": "integer",
-          "primaryKey": false,
-          "notNull": false
-        },
-        "radical_names": {
-          "name": "radical_names",
-          "type": "jsonb",
-          "primaryKey": false,
-          "notNull": false
-        },
-        "nanori": {
-          "name": "nanori",
-          "type": "jsonb",
-          "primaryKey": false,
-          "notNull": false
-        },
-        "meanings": {
-          "name": "meanings",
-          "type": "jsonb",
-          "primaryKey": false,
-          "notNull": false
-        },
-        "readings": {
-          "name": "readings",
-          "type": "jsonb",
-          "primaryKey": false,
-          "notNull": false
-        },
-        "query_codes": {
-          "name": "query_codes",
-          "type": "jsonb",
-          "primaryKey": false,
-          "notNull": false
+          "notNull": true
         },
         "codepoints": {
           "name": "codepoints",
           "type": "jsonb",
           "primaryKey": false,
-          "notNull": false
+          "notNull": true,
+          "default": "'[]'::jsonb"
         },
-        "dictionary_refs": {
-          "name": "dictionary_refs",
+        "radicals": {
+          "name": "radicals",
+          "type": "jsonb",
+          "primaryKey": false,
+          "notNull": true,
+          "default": "'[]'::jsonb"
+        },
+        "misc": {
+          "name": "misc",
           "type": "jsonb",
           "primaryKey": false,
           "notNull": false
         },
-        "variants": {
-          "name": "variants",
+        "dictionary_references": {
+          "name": "dictionary_references",
           "type": "jsonb",
           "primaryKey": false,
-          "notNull": false
+          "notNull": true,
+          "default": "'[]'::jsonb"
+        },
+        "query_codes": {
+          "name": "query_codes",
+          "type": "jsonb",
+          "primaryKey": false,
+          "notNull": true,
+          "default": "'[]'::jsonb"
+        },
+        "readings_meanings": {
+          "name": "readings_meanings",
+          "type": "jsonb",
+          "primaryKey": false,
+          "notNull": true,
+          "default": "'[]'::jsonb"
         }
       },
       "indexes": {},
@@ -140,33 +115,36 @@
           "name": "kanji",
           "type": "jsonb",
           "primaryKey": false,
-          "notNull": false
+          "notNull": true,
+          "default": "'[]'::jsonb"
         },
         "readings": {
           "name": "readings",
           "type": "jsonb",
           "primaryKey": false,
-          "notNull": true
+          "notNull": true,
+          "default": "'[]'::jsonb"
         },
         "senses": {
           "name": "senses",
           "type": "jsonb",
           "primaryKey": false,
-          "notNull": true
+          "notNull": true,
+          "default": "'[]'::jsonb"
         },
         "tags": {
           "name": "tags",
-          "type": "text",
+          "type": "text[]",
           "primaryKey": false,
-          "notNull": false,
-          "default": []
+          "notNull": true,
+          "default": "'{}'"
         },
         "priorities": {
           "name": "priorities",
-          "type": "text",
+          "type": "text[]",
           "primaryKey": false,
-          "notNull": false,
-          "default": []
+          "notNull": true,
+          "default": "'{}'"
         }
       },
       "indexes": {},

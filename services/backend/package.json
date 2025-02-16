@@ -9,7 +9,7 @@
     "dev:db": "docker compose -p dakku -f ./docker-compose.yml up",
     "dev:bun": "bun run --hot src/index.ts",
     "db:generateMigration": "drizzle-kit generate",
-    "db:migrate": "DB_MIGRATING=true bun run ./src/db/migrate.ts",
+    "db:migrate": "DB_MIGRATING=true bun run ./src/db/migration.ts",
     "db:seed": "DB_SEEDING=true bun run ./src/db/seed.ts",
     "dev:tsc": "tsc --project tsconfig.build.json --watch",
     "build": "tsc --project tsconfig.build.json"

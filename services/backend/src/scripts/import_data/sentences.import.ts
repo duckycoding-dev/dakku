@@ -2,11 +2,8 @@ import { db } from '../../db';
 import { sentences } from '../../features/sentences/sentences.db';
 import fs from 'fs/promises';
 
-export async function importSentences() {
-  const data = await fs.readFile(
-    '../../opensource_data_used/sentences.tsv',
-    'utf-8',
-  );
+export async function importSentences(filePath: string) {
+  const data = await fs.readFile(filePath, 'utf-8');
   const lines = data.split('\n');
 
   for (const line of lines) {

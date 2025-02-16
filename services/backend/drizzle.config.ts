@@ -13,4 +13,5 @@ export default defineConfig({
     port: env.POSTGRES_PORT,
     user: env.POSTGRES_USER,
   },
+  casing: 'snake_case',
 });

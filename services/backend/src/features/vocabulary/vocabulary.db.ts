@@ -9,8 +9,7 @@ import {
   type Sense,
 } from './vocabulary.types';
 import { createSelectSchema } from 'drizzle-zod';
-import { sql } from 'drizzle-orm';
-await sql`UPDATE vocabulary SET kanji = '[]' WHERE kanji IS NULL`;
+
 // JMdict Dictionary Database schema
 export const vocabulary = pgTable('vocabulary', {
   id: integer().primaryKey(), // from ent_seq
@@ -24,7 +23,7 @@ export const vocabulary = pgTable('vocabulary', {
     .notNull()
     .default([]), // Searchable tags compiled from pos, field, misc
   priorities: text({
-    enum: Priorities,
+    enum: [...Priorities],
   })
     .array()
     .notNull()

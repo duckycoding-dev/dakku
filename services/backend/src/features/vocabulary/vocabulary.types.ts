@@ -301,8 +301,57 @@ const Priorities = [
   'spec2', // Special priority 2
   'gai1', // Gai priority 1
   'gai2', // Gai priority 2
+  'nf01',
+  'nf02',
+  'nf03',
+  'nf04',
+  'nf05',
+  'nf06',
+  'nf07',
+  'nf08',
+  'nf09',
+  'nf10',
+  'nf11',
+  'nf12',
+  'nf13',
+  'nf14',
+  'nf15',
+  'nf16',
+  'nf17',
+  'nf18',
+  'nf19',
+  'nf20',
+  'nf21',
+  'nf22',
+  'nf23',
+  'nf24',
+  'nf25',
+  'nf26',
+  'nf27',
+  'nf28',
+  'nf29',
+  'nf30',
+  'nf31',
+  'nf32',
+  'nf33',
+  'nf34',
+  'nf35',
+  'nf36',
+  'nf37',
+  'nf38',
+  'nf39',
+  'nf40',
+  'nf41',
+  'nf42',
+  'nf43',
+  'nf44',
+  'nf45',
+  'nf46',
+  'nf47',
+  'nf48',
 ] as const;
-export type Priority = (typeof Priorities)[number] | `nf${string}`;
+
+export type Priority = (typeof Priorities)[number];
 
 // Additional types inferred from JMdict_e.xml and database schema
 
@@ -350,9 +399,9 @@ export type ReadingElement = {
   priorities: Priority[];
 };
 
-export type Vocabulary = {
+export type VocabularyForImport = {
   id: number;
-  kanji?: KanjiElement[];
+  kanji: KanjiElement[];
   readings: ReadingElement[];
   senses: Sense[];
   tags: KanjiTag[];

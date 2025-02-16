@@ -14,7 +14,7 @@ import type {
   ReadingInfo,
   Sense,
   Dialect,
-  Vocabulary,
+  VocabularyForImport,
 } from '../../features/vocabulary/vocabulary.types';
 
 // Types based on DTD definitions
@@ -110,115 +110,114 @@ export async function importJMdict(filePath: string) {
 
   console.log(`📝 Processing ${dictionary.JMdict.entry.length} entries...`);
 
-  const entries: Vocabulary[] = dictionary.JMdict.entry.map((entry) => {
-    // Process kanji elements
-    const kanji: KanjiElement[] | undefined = entry.k_ele
-      ? toArray(entry.k_ele).map((k) => ({
-          text: k.keb.text,
-          infos: toArray(k.ke_inf)
-            .map((inf) => getText(inf))
-            .filter((info) => info !== undefined),
-          priorities: toArray(k.ke_pri)
-            .map((pri) => getText(pri))
-            .filter((pri) => pri !== undefined),
-        }))
-      : undefined;
+  const entries: VocabularyForImport[] = dictionary.JMdict.entry.map(
+    (entry) => {
+      // Process kanji elements
+      const kanji: KanjiElement[] = toArray(entry.k_ele).map((k) => ({
+        text: k.keb.text,
+        infos: toArray(k.ke_inf)
+          .map((inf) => getText(inf))
+          .filter((info) => info !== undefined),
+        priorities: toArray(k.ke_pri)
+          .map((pri) => getText(pri))
+          .filter((pri) => pri !== undefined),
+      }));
+      // Process reading elements
+      const readings: ReadingElement[] = toArray(entry.r_ele).map((r) => ({
+        text: r.reb.text,
+        noKanji: r.re_nokanji ? true : false,
+        restrictions: toArray(r.re_restr)
+          .map((restr) => getText(restr))
+          .filter((restr) => restr !== undefined),
+        infos: toArray(r.re_inf)
+          .map((inf) => getText(inf))
+          .filter((inf) => inf !== undefined),
+        priorities: toArray(r.re_pri)
+          .map((pri) => getText(pri))
+          .filter((pri) => pri !== undefined),
+      }));
 
-    // Process reading elements
-    const readings: ReadingElement[] = toArray(entry.r_ele).map((r) => ({
-      text: r.reb.text,
-      noKanji: r.re_nokanji ? true : false,
-      restrictions: toArray(r.re_restr)
-        .map((restr) => getText(restr))
-        .filter((restr) => restr !== undefined),
-      infos: toArray(r.re_inf)
-        .map((inf) => getText(inf))
-        .filter((inf) => inf !== undefined),
-      priorities: toArray(r.re_pri)
-        .map((pri) => getText(pri))
-        .filter((pri) => pri !== undefined),
-    }));
+      // Process sense elements
+      const senses: Sense[] = toArray(entry.sense).map((s) => ({
+        stagk: toArray(s.stagk)
+          .map((stagk) => getText(stagk))
+          .filter((val) => val !== undefined),
+        stagr: toArray(s.stagr)
+          .map((stagr) => getText(stagr))
+          .filter((val) => val !== undefined),
+        partsOfSpeech: toArray(s.pos)
+          .map((pos) => getText(pos))
+          .filter((val) => val !== undefined),
+        xrefs: toArray(s.xref)
+          .map((xref) => getText(xref))
+          .filter((val) => val !== undefined),
+        ant: toArray(s.ant)
+          .map((ant) => getText(ant))
+          .filter((val) => val !== undefined),
+        fields: toArray(s.field)
+          .map((field) => getText(field))
+          .filter((val) => val !== undefined),
+        miscs: toArray(s.misc)
+          .map((misc) => getText(misc))
+          .filter((val) => val !== undefined),
+        infos: toArray(s.s_inf)
+          .map((inf) => getText(inf))
+          .filter((val) => val !== undefined),
+        loanwordSources: toArray(s.lsource)
+          .map((ls) => ({
+            originalWordOrSentence: ls.text,
+            originalLang: ls['xml:lang'] || 'eng',
+            type: ls.ls_type || 'full',
+            waseieigo: ls.ls_wasei === 'y' ? true : false,
+          }))
+          .filter((val) => val !== undefined),
+        dialects: toArray(s.dial)
+          .map((dial) => getText(dial))
+          .filter((val) => val !== undefined),
+        glosses: toArray(s.gloss)
+          .map((g) => ({
+            text: g.text,
+            lang: g['xml:lang'] || 'eng',
+            gender: g.g_gend,
+            type: g.g_type,
+          }))
+          .filter((val) => val !== undefined),
+        antonyms: toArray(s.ant)
+          .map((ant) => ant.text)
+          .filter((val) => val !== undefined),
+      }));
 
-    // Process sense elements
-    const senses: Sense[] = toArray(entry.sense).map((s) => ({
-      stagk: toArray(s.stagk)
-        .map((stagk) => getText(stagk))
-        .filter((val) => val !== undefined),
-      stagr: toArray(s.stagr)
-        .map((stagr) => getText(stagr))
-        .filter((val) => val !== undefined),
-      partsOfSpeech: toArray(s.pos)
-        .map((pos) => getText(pos))
-        .filter((val) => val !== undefined),
-      xrefs: toArray(s.xref)
-        .map((xref) => getText(xref))
-        .filter((val) => val !== undefined),
-      ant: toArray(s.ant)
-        .map((ant) => getText(ant))
-        .filter((val) => val !== undefined),
-      fields: toArray(s.field)
-        .map((field) => getText(field))
-        .filter((val) => val !== undefined),
-      miscs: toArray(s.misc)
-        .map((misc) => getText(misc))
-        .filter((val) => val !== undefined),
-      infos: toArray(s.s_inf)
-        .map((inf) => getText(inf))
-        .filter((val) => val !== undefined),
-      loanwordSources: toArray(s.lsource)
-        .map((ls) => ({
-          originalWordOrSentence: ls.text,
-          originalLang: ls['xml:lang'] || 'eng',
-          type: ls.ls_type || 'full',
-          waseieigo: ls.ls_wasei === 'y' ? true : false,
-        }))
-        .filter((val) => val !== undefined),
-      dialects: toArray(s.dial)
-        .map((dial) => getText(dial))
-        .filter((val) => val !== undefined),
-      glosses: toArray(s.gloss)
-        .map((g) => ({
-          text: g.text,
-          lang: g['xml:lang'] || 'eng',
-          gender: g.g_gend,
-          type: g.g_type,
-        }))
-        .filter((val) => val !== undefined),
-      antonyms: toArray(s.ant)
-        .map((ant) => ant.text)
-        .filter((val) => val !== undefined),
-    }));
+      // Collect all tags for searchability
+      const tags: KanjiTag[] = Array.from(
+        new Set(
+          [
+            ...senses.flatMap((s) => s.partsOfSpeech),
+            ...senses.flatMap((s) => s.fields),
+            ...senses.flatMap((s) => s.miscs),
+          ].filter((val) => val !== undefined),
+        ),
+      );
 
-    // Collect all tags for searchability
-    const tags: KanjiTag[] = Array.from(
-      new Set(
-        [
-          ...senses.flatMap((s) => s.partsOfSpeech),
-          ...senses.flatMap((s) => s.fields),
-          ...senses.flatMap((s) => s.miscs),
-        ].filter((val) => val !== undefined),
-      ),
-    );
+      // Collect all priorities
+      const priorities: Priority[] = Array.from(
+        new Set(
+          [
+            ...(kanji ? kanji.flatMap((k) => k.priorities) : []),
+            ...readings.flatMap((r) => r.priorities),
+          ].filter(Boolean),
+        ),
+      );
 
-    // Collect all priorities
-    const priorities: Priority[] = Array.from(
-      new Set(
-        [
-          ...(kanji ? kanji.flatMap((k) => k.priorities) : []),
-          ...readings.flatMap((r) => r.priorities),
-        ].filter(Boolean),
-      ),
-    );
-
-    return {
-      id: parseInt(entry.ent_seq.text, 10),
-      kanji,
-      readings,
-      senses,
-      tags: tags,
-      priorities: priorities,
-    };
-  });
+      return {
+        id: parseInt(entry.ent_seq.text, 10),
+        kanji,
+        readings,
+        senses,
+        tags: tags,
+        priorities: priorities,
+      };
+    },
+  );
 
   console.log('💾 Inserting entries into database...');
 

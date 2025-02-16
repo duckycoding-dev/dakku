@@ -2,6 +2,20 @@ import fs from 'fs';
 import { XMLParser } from 'fast-xml-parser';
 import { db } from '../../db'; // Import your Drizzle DB setup
 import { kanjis } from '../../features/kanji/kanji.db'; // Import the kanji table
+import type {
+  CpType,
+  DrType,
+  KanjiForImport,
+  OnType,
+  QcType,
+  RadType,
+  RStatus,
+  RType,
+  SkipMisclass,
+  VarType,
+} from 'features/kanji/kanji.types/';
+
+// Types based on DTD definitions
 
 export type KanjiDic2 = {
   kanjidic2: {
@@ -37,13 +51,13 @@ export type KanjiCharacter = {
 
 // Unicode and JIS Codepoints
 export type Codepoint = {
-  cp_type: string;
+  cp_type: CpType;
   text: string;
 };
 
 // Radical information
 export type Radical = {
-  rad_type: string;
+  rad_type: RadType;
   text: string;
 };
 
@@ -59,13 +73,13 @@ export type MiscInfo = {
 
 // Kanji Variants (old/new forms)
 export type Variant = {
-  var_type: string;
+  var_type: VarType;
   text: string;
 };
 
 // Dictionary references
 export type DictionaryReference = {
-  dr_type: string;
+  dr_type: DrType;
   text: string;
   m_vol?: { text: string };
   m_page?: { text: string };
@@ -73,9 +87,9 @@ export type DictionaryReference = {
 
 // Query codes for searching kanji
 export type QueryCode = {
-  qc_type: string;
+  qc_type: QcType;
   text: string;
-  skip_misclass?: string;
+  skip_misclass?: SkipMisclass;
 };
 
 // Readings and meanings
@@ -86,10 +100,10 @@ export type ReadingMeaningGroup = {
 
 // Readings (on-yomi, kun-yomi, pinyin, etc.)
 export type Reading = {
-  r_type: string;
+  r_type: RType;
   text: string;
-  on_type?: string;
-  r_status?: string;
+  on_type?: OnType;
+  r_status?: RStatus;
 };
 
 // Meaning in different languages
@@ -123,10 +137,8 @@ function toArray<T>(value: T | T[] | undefined): T[] {
 }
 
 // Function to Import Data into PostgreSQL
-async function importKanji() {
-  const kanjiData = parseXMLFile(
-    '../../../../opensource_data_used/kanjidic2.xml',
-  );
+export async function importKanji(filePath: string) {
+  const kanjiData = parseXMLFile(filePath);
 
   if (!kanjiData.kanjidic2?.character) {
     console.error('❌ No kanji data found in XML.');
@@ -135,50 +147,56 @@ async function importKanji() {
 
   console.log('✅ Extracting kanji data...');
 
-  const kanjiEntries = kanjiData.kanjidic2.character.map((char) => ({
-    id: char.literal.text,
-    grade: char.misc?.grade?.text
-      ? parseInt(char.misc.grade.text, 10)
-      : undefined,
-    strokeCount: toArray(char.misc?.stroke_count).map((s) =>
-      parseInt(s.text, 10),
-    ),
-    frequency: char.misc?.freq?.text
-      ? parseInt(char.misc.freq.text, 10)
-      : undefined,
-    jlptLevel: char.misc?.jlpt?.text
-      ? parseInt(char.misc.jlpt.text, 10)
-      : undefined,
-    radicalNames: toArray(char.misc?.rad_name).map((r) => r.text),
-    nanori: toArray(char.reading_meaning?.nanori).map((n) => n.text),
-    meanings: toArray(char.reading_meaning?.rmgroup).flatMap((rm) =>
-      toArray(rm.meaning).map((m) => ({
-        lang: m.m_lang || 'en',
-        meaning: m.text,
+  const kanjiEntries: KanjiForImport[] = kanjiData.kanjidic2.character.map(
+    (char) => ({
+      literal: char.literal.text,
+      codepoints: toArray(char.codepoint.cp_value).map((cp) => ({
+        type: cp.cp_type,
+        value: cp.text,
       })),
-    ),
-    readings: toArray(char.reading_meaning?.rmgroup).flatMap((rm) =>
-      toArray(rm.reading).map((r) => ({ type: r.r_type, value: r.text })),
-    ),
-    queryCodes: toArray(char.query_code?.q_code).map((q) => ({
-      type: q.qc_type,
-      value: q.text,
-    })),
-    codepoints: toArray(char.codepoint.cp_value).map((cp) => ({
-      type: cp.cp_type,
-      value: cp.text,
-    })),
-    dictionaryRefs: toArray(char.dic_number?.dic_ref).map((dic) => ({
-      type: dic.dr_type,
-      value: dic.text,
-      mVol: dic.m_vol ? parseInt(dic.m_vol.text, 10) : undefined,
-      mPage: dic.m_page ? parseInt(dic.m_page.text, 10) : undefined,
-    })),
-    variants: toArray(char.misc?.variant).map((varItem) => ({
-      type: varItem.var_type,
-      value: varItem.text,
-    })),
-  }));
+      radicals: toArray(char.radical.rad_value).map((rad) => ({
+        type: rad.rad_type,
+        value: parseInt(rad.text),
+      })),
+      misc: {
+        grade: char.misc?.grade?.text
+          ? parseInt(char.misc.grade.text, 10)
+          : undefined,
+        strokeCount: toArray(char.misc?.stroke_count).map((s) =>
+          parseInt(s.text, 10),
+        ),
+        frequency: char.misc?.freq?.text
+          ? parseInt(char.misc.freq.text, 10)
+          : undefined,
+        jlptLevel: char.misc?.jlpt?.text
+          ? parseInt(char.misc.jlpt.text, 10)
+          : undefined,
+      },
+      dictionaryReferences: toArray(char.dic_number?.dic_ref).map((dic) => ({
+        type: dic.dr_type,
+        text: dic.text,
+        moroVolume: dic.m_vol ? parseInt(dic.m_vol.text, 10) : undefined,
+        moroVolumePage: dic.m_page ? parseInt(dic.m_page.text, 10) : undefined,
+      })),
+      queryCodes: toArray(char.query_code?.q_code).map((q) => ({
+        type: q.qc_type,
+        value: q.text,
+        skipMisclassification: q.skip_misclass,
+      })),
+      readingsMeanings: toArray(char.reading_meaning?.rmgroup).map((rm) => ({
+        reading: toArray(rm.reading).map((r) => ({
+          readingType: r.r_type,
+          text: r.text,
+          onType: r.on_type,
+          JouyouKanji: r.r_status === 'jy',
+        })),
+        meaning: toArray(rm.meaning).map((m) => ({
+          lang: m.m_lang || 'en',
+          text: m.text,
+        })),
+      })),
+    }),
+  );
 
   console.log(`📥 Preparing to insert ${kanjiEntries.length} kanji entries...`);
   const batchSize = 500;
@@ -189,6 +207,3 @@ async function importKanji() {
   }
   console.log('✅ Kanji data imported successfully!');
 }
-
-// Run the import
-importKanji();
