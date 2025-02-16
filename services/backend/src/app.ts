@@ -1,3 +1,4 @@
+import sentencesRouter from './features/sentences/sentences.router';
 import userRouter from './features/user/user.router';
 import vocabularyRouter from './features/vocabulary/vocabulary.router';
 import type { AppOpenAPI } from './types/app_context';
@@ -5,7 +6,11 @@ import { createApp } from './utils/create-app';
 
 export const app = createApp();
 
-const routers = [userRouter, vocabularyRouter] as const satisfies AppOpenAPI[];
+const routers = [
+  userRouter,
+  vocabularyRouter,
+  sentencesRouter,
+] as const satisfies AppOpenAPI[];
 
 routers.forEach((router) => {
   app.route('/', router);

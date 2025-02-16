@@ -1,24 +1,21 @@
 import type { PostgresJsDatabase } from 'drizzle-orm/postgres-js';
 import { eq } from 'drizzle-orm';
-import { vocabulary } from '../vocabulary/vocabulary.db';
-import { type Vocabulary, vocabularySchema } from './vocabulary.db';
+import { sentences } from '../sentences/sentences.db';
+import { type Sentence, sentencesSchema } from './sentences.db';
 import { formatZodError } from 'utils/mapping/';
 import { AppError } from 'utils/errors/';
 
-export type VocabularyRepository = {
-  getVocab: (id: number) => Promise<Vocabulary | undefined>;
+export type SentencesRepository = {
+  getSentence: (id: number) => Promise<Sentence | undefined>;
   // ... other methods
 };
 
-export const createVocabularyRepository = (
+export const createSentencesRepository = (
   db: PostgresJsDatabase,
-): VocabularyRepository => {
+): SentencesRepository => {
   return {
-    getVocab: async (id) => {
-      const res = await db
-        .select()
-        .from(vocabulary)
-        .where(eq(vocabulary.id, id));
+    getSentence: async (id) => {
+      const res = await db.select().from(sentences).where(eq(sentences.id, id));
       if (res.length === 0) {
         return undefined;
       }
@@ -27,7 +24,7 @@ export const createVocabularyRepository = (
         return undefined;
       }
 
-      const parsed = vocabularySchema.safeParse(vocab);
+      const parsed = sentencesSchema.safeParse(vocab);
       if (parsed.success) {
         return parsed.data;
       }

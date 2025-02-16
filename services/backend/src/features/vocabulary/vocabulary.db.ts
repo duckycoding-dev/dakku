@@ -14,7 +14,7 @@ await sql`UPDATE vocabulary SET kanji = '[]' WHERE kanji IS NULL`;
 // JMdict Dictionary Database schema
 export const vocabulary = pgTable('vocabulary', {
   id: integer().primaryKey(), // from ent_seq
-  kanji: jsonb().$type<KanjiElement[]>().default([]), // Array of kanji elements (if available)
+  kanji: jsonb().$type<KanjiElement[]>().default([]).notNull(), // Array of kanji elements (if available)
   readings: jsonb().$type<ReadingElement[]>().default([]).notNull(), // Array of reading elements
   senses: jsonb().$type<Sense[]>().default([]).notNull(), // Array of sense elements
   tags: text({
