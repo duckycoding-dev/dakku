@@ -9,7 +9,13 @@ import eslintConfigPrettier from 'eslint-config-prettier';
 /** @type {import('eslint').Linter.Config[]} */
 export default [
   { files: ['./src/**/*.{js,mjs,cjs,ts}'] },
-  { ignores: ['**/node_modules/**', '**/dist/**'] },
+  {
+    ignores: [
+      '**/node_modules/**',
+      '**/dist/**',
+      'apps/frontend/src/routeTree.gen.ts',
+    ],
+  },
   { languageOptions: { globals: globals.node } },
   pluginJs.configs.recommended,
   ...tseslint.configs.recommended,
