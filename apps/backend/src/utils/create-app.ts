@@ -7,6 +7,7 @@ import type {
   AppRoutes,
 } from '../types/app_context';
 import { configureOpenAPI } from './configure-open-api';
+import { formatZodError } from './mapping';
 
 export function createRouter() {
   const router = new OpenAPIHono<AppContext>({
@@ -15,11 +16,7 @@ export function createRouter() {
       if (!result.success) {
         throw new AppError('VALIDATION', {
           cause: result.target,
-          message: result.error.errors
-            .map((e, index) => {
-              return `${index + 1}- ${e.message}`;
-            })
-            .join('\n'),
+          message: formatZodError(result.error),
         });
       }
     },

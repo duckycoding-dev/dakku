@@ -138,8 +138,12 @@ From this we can define the Zod schemas using `drizzle-zod` and then infer the t
 
 ### .types.ts (optional)
 
-Here we can defined some types that will only be used locally and not be shared with other packages: for example, if need to write a script like we did to import vocabulary, and we want to do it in a TypeSafe way, we can define those types here
+Here we can define some types that will only be used locally and not be shared with other packages: for example, if need to write a script like we did to import vocabulary, and we want to do it in a TypeSafe way, we can define them here.
 
-# Middlewares - TODO
+### Middlewares - TODO
 
-# Error handler - TODO
+### Error handler
+
+The Hono app instance has an error handler attached at its root (sort of a middleware): this will catch every error and will show or not specific error data based on the environment (dev or not).\
+Custom errors should be thrown using the custom made `AppError` class which handles default messages and the ideal status code based on the provided string union type: the developer can provide custom messages and defined whether or not they can reach the final user if the environment is not dev.\
+The default Hono Error class was not suiting my needs and had some extra fields which I don't need.
