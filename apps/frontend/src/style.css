@@ -2,6 +2,12 @@
 
 @plugin 'tailwindcss-animate';
 
+@font-face {
+  font-family: 'Inter';
+  src: url('/fonts/Inter/Inter-VariableFont_slnt,wght.ttf');
+  font-display: swap;
+}
+
 @custom-variant dark (&:is(.dark *));
 
 :root {
@@ -30,6 +36,7 @@
   --chart-4: hsl(43 74% 66%);
   --chart-5: hsl(27 87% 67%);
   --radius: 0.6rem;
+  font-family: 'Inter', sans-serif;
 }
 
 .dark {
@@ -91,6 +98,8 @@
 }
 
 @layer base {
+  @import './styles/style-reset.css';
+  @import './styles/holy-grail-layout.css';
   * {
     @apply border-border outline-ring/50;
   }
